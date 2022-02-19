@@ -1,10 +1,10 @@
-package com.pyrkon.conferencedemo;
+package com.example.demo;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ConferenceDemoApplicationTests {
+class DemoApplicationTests {
 
 	@Test
 	void contextLoads() {
