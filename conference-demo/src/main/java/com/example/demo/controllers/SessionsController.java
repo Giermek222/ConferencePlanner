@@ -10,7 +10,7 @@ import java.net.http.HttpResponse;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/sessions")
+@RequestMapping("/sessions")
 public class SessionsController {
 
     @Autowired
