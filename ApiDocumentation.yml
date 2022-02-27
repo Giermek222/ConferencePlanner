@@ -1,0 +1,438 @@
+openapi: 3.0.1
+info:
+  title: Cookly
+  description: This is specification of API for SE2 project. It helps to connect customer
+    with the meal of their dreams
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: apiteam@swagger.io
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+- url: /v2
+tags:
+- name: recipe
+- name: ingredient
+- name: security
+- name: vendors
+paths:
+  /recipe:
+    post:
+      tags:
+      - recipe
+      summary: Add a new recipe to the store
+      operationId: addRecipe
+      requestBody:
+        description: Recipe object that needs to be added to the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/recipe'
+        required: true
+      responses:
+        200:
+          description: OK
+          content: {}
+        405:
+          description: Invalid input
+          content: {}
+
+    get:
+      tags:
+      - recipe
+      summary: returns random recipe from previously selected ingredients
+      responses:
+        200:
+          description: Ok
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/recipe'
+        404:
+          description: Recipe not found
+          content: {}
+ 
+  /recipe/{id}:
+    put:
+      tags:
+      - recipe
+      summary: Update an existing recipe
+      operationId: updateRecipe
+      parameters:
+        - in: "path"
+          name: "id"
+          description: "ID recipe to update"
+          required: true
+          schema:
+            type: "integer"
+      requestBody:
+        description: Recipe object that needs to be added to the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/recipe'
+        required: true
+      responses:
+        200:
+          description: OK
+          content: {}
+        400:
+          description: Invalid ID supplied
+          content: {}
+        404:
+          description: Recipe not found
+          content: {}
+        405:
+          description: Validation exception
+          content: {}
+      
+    delete:
+      tags:
+      - recipe
+      summary: delete existing recipe
+      parameters:
+        - in: "path"
+          name: "id"
+          description: "ID recipe to delete"
+          required: true
+          schema:
+            type: "integer"
+      responses:
+        200:
+          description: OK
+        400:
+          description: Invalid ID supplied
+          content: {}
+        404:
+          description: Recipe not found
+          content: {}
+  /ingredient:
+    post:
+      tags:
+      - ingredient
+      summary: Add a new ingredient to the store
+      operationId: addIngredient
+      requestBody:
+        description: ingredient object that needs to be added to the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ingredient'
+        required: true
+      responses:
+        200:
+          description: OK
+          content: {}
+        405:
+          description: Invalid input
+          content: {}
+
+    get:
+      tags:
+      - ingredient
+      summary: returns list of next possible ingredients
+      responses:
+        200:
+          description: Ok
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ingredient' 
+  
+  /ingredient/{id}:
+    put:
+      tags:
+      - ingredient
+      summary: Update an existing ingredient
+      operationId: updateingredient
+      parameters:
+        - name: page
+          in: query
+          required: true
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: Amount of results per page
+          schema:
+            type: integer
+            default: 10
+        - in: path
+          name: id
+          description: "ID ingredient to edit"
+          required: true
+          schema:
+            type: "integer"
+      requestBody:
+        description: ingredient object that needs to replace previous one
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ingredient'
+        required: true
+      responses:
+        200:
+          description: OK
+          content: {}
+        400:
+          description: Invalid ID supplied
+          content: {}
+        404:
+          description: Recipe not found
+          content: {}
+        405:
+          description: Validation exception
+          content: {}
+      
+    delete:
+      tags:
+      - ingredient
+      summary: delete existing ingredient
+      parameters:
+        - in: "path"
+          name: "id"
+          description: "ID ingredient to delete"
+          required: true
+          schema:
+            type: "integer"
+      responses:
+        200:
+          description: OK
+        400:
+          description: Invalid ID supplied
+          content: {}
+        404:
+          description: ingredient not found
+
+                  
+  /vendors/recipes:
+    get:
+      tags:
+      - vendors
+      summary: Get list of recipes available in delivery
+      parameters:
+      - name: page
+        in: query
+        required: true
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        description: Amount of results per page
+        schema:
+          type: integer
+          default: 10
+      - in: query
+        name: name
+        required: true
+        description: name of searched recipe
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/vendor'
+        400:
+          description: Invalid ID supplied
+          content: {}
+          
+  /vendors/ingretients:
+    get:
+      tags:
+      - vendors
+      summary: Get list of ingretients available in delivery
+      parameters:
+      - name: page
+        in: query
+        required: true
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        description: Amount of results per page
+        schema:
+          type: integer
+          default: 10
+      - in: query
+        name: name
+        required: true
+        description: name of searched ingredient
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/vendor'
+        400:
+          description: Invalid ID supplied
+          content: {}
+                  
+  /registration:
+    post:
+      tags:
+        - security
+      summary: register new user
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  username:
+                    type: "string"
+                  emal:
+                    type: "string"
+                  password:
+                    type: "string"
+                  repPassword:
+                    type: "string"
+  /auth:
+    post:
+      tags:
+        - security
+      summary: logging in
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  token:
+                    type: "string"
+  /auth/{id}:
+    delete:
+      tags:
+      - security
+      summary: delete existing user
+      parameters:
+        - in: "path"
+          name: "id"
+          description: "ID of user to delete"
+          required: true
+          schema:
+            type: "integer"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user"
+        "404":
+          description: user not found
+    put:
+      tags:
+      - security
+      summary: edit existing user
+      parameters:
+        - in: "path"
+          name: "id"
+          description: "ID of user to edit"
+          required: true
+          schema:
+            type: "integer"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user"
+        "404":
+          description: user not found
+
+components:
+  schemas:
+    ingredient:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        photo:
+          type: string
+    recipe:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        instructions:
+          type: string
+        ingredients:
+          type: array
+          items:
+            type: object
+            properties:
+              ingredient:
+                $ref: '#/components/schemas/ingredient'
+              quantity:
+                type: string
+        tags:
+          type: array
+          items:
+            type: string
+            enum:
+            - vegetarian
+            - gluten free
+            - low calorie
+            - no lactose
+    user:
+      type: object
+      properties:
+        id:
+          type: integer
+        username:
+          type: string
+        password:
+          type: string
+        isAdmin:
+          type: boolean
+        profilePhoto:
+          type: string
+        savedRecipes:
+          type: array
+          items:
+            $ref: '#/components/schemas/recipe'
+    vendor:
+      type: object
+      properties:
+        productName:
+          type: string
+        vendorName:
+          type: string
+        price:
+          type: integer
+        
+
